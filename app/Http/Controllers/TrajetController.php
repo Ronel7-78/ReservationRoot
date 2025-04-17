@@ -18,7 +18,7 @@ class TrajetController extends Controller
     {
         Trajet::create($request->validated());
          
-        return redirect()->route('agence.dashboard')
+        return redirect()->route('Agence.dashboard')
             ->with('success', 'Trajet créé avec succès!');
     }
     /**

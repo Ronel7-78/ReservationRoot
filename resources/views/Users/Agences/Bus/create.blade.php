@@ -8,7 +8,7 @@
         <div class="col-md-6 ">
            <div class="card shadow bd">
                 <div class="card-header bg-primary text-white">
-                    <h4>Ajouter une nouvelle agence</h4>
+                    <h4>Ajouter un Bus</h4>
                 </div>
                 <div class="card-body">
                     <!-- resources/views/agence/bus/create.blade.php -->

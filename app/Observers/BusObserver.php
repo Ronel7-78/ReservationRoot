@@ -16,9 +16,9 @@ class BusObserver
 
     public function updating(Bus $bus){
     // Met à jour le statut si nécessaire
-    //$bus->statut = $bus->voyages()
-    //    ->whereDate('date_depart', '>=', now())
-    //    ->exists() ? 'indisponible' : 'disponible';
+    $bus->statut = $bus->voyages()
+        ->whereDate('date_depart', '>=', now())
+       ->exists() ? 'indisponible' : 'disponible';
 }
 
     /**

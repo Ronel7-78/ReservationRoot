@@ -26,7 +26,7 @@ class Bus extends Model
 
     public function voyages()
     {
-        //return $this->hasMany(Voyage::class);
+        return $this->hasMany(Voyage::class);
     }
 
     protected static function boot(){
@@ -43,8 +43,17 @@ class Bus extends Model
     // Vérifie la disponibilité du bus
     public function estDisponible($date)
     {
-        //return !$this->voyages()
-        //    ->whereDate('date_depart', $date)
-         //   ->exists();
+        return !$this->voyages()
+            ->whereDate('date_depart', $date)
+            ->exists();
+    }
+
+    // app/Models/Bus.php
+    public function updateStatut(){
+        $this->statut = $this->voyages()
+            ->whereDate('date_depart', '>=', now())
+            ->exists() ? 'indisponible' : 'disponible';
+            
+        $this->save();
     }
 }

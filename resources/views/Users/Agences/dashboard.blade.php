@@ -86,13 +86,13 @@
                 <div class="col-12">
                     <h3 class="mb-4"><i class="fas fa-bolt me-2"></i>Actions rapides</h3>
                     <div class="d-grid gap-3 d-md-flex justify-content-md-start">
-                        <a href="#" class="btn btn-lg btn-primary">
+                        <a href="{{ route('Agence.Trajet.create') }}" class="btn btn-lg btn-primary">
                             <i class="fas fa-plus-circle me-2"></i>Nouveau trajet
                         </a>
                         <a href="{{ route('Agence.Bus.create') }}" class="btn btn-lg btn-success">
                             <i class="fas fa-bus me-2"></i>Ajouter un bus
                         </a>
-                        <a href="#" class="btn btn-lg btn-info text-white">
+                        <a href="{{ route('Agence.Voyage.create') }}" class="btn btn-lg btn-info text-white">
                             <i class="fas fa-calendar-plus me-2"></i>Créer voyage
                         </a>
                     </div>

@@ -6,6 +6,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AgenceController;
 use App\Http\Controllers\BusController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\TrajetController;
+use App\Http\Controllers\VoyageController;
 use Illuminate\Support\Facades\Route ;
 
 // Route publique
@@ -47,6 +49,11 @@ Route::middleware(['auth', 'role:agence'])->group(function () {
         Route::post('check-bus-disponibilite', [BusController::class, 'checkDisponibilite']);
         Route::get('/bus/create',[BusController::class, 'create'])->name('Agence.Bus.create');
         Route::post('/bus/store',[BusController::class, 'store'])->name('Agence.Bus.store');
+        Route::get('/trajet/create',[TrajetController::class, 'create'])->name('Agence.Trajet.create');
+        Route::post('/trajet/store',[TrajetController::class, 'store'])->name('Agence.Trajet.store');
+        Route::resource('agence/voyages', VoyageController::class)->except(['show']);
+        Route::get('/voyage/create',[VoyageController::class, 'create'])->name('Agence.Voyage.create'); 
+        Route::post('/voyage/store',[VoyageController::class, 'store'])->name('Agence.Voyage.store');
     });
     
 });
