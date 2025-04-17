@@ -17,7 +17,7 @@ class TrajetController extends Controller
     public function store(StoreTrajetRequest $request)
     {
         Trajet::create($request->validated());
-        
+         
         return redirect()->route('agence.dashboard')
             ->with('success', 'Trajet créé avec succès!');
     }
