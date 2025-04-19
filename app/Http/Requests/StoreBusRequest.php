@@ -20,7 +20,7 @@ class StoreBusRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(){
-    
+
     return [
         'libelle' => 'required|string|max:255',
         'immatriculation' => 'required|string|unique:buses',
@@ -30,5 +30,20 @@ class StoreBusRequest extends FormRequest
         'photo_interieur' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         'photo_exterieur' => 'required|image|mimes:jpeg,png,jpg|max:2048',
     ];
+    }
+
+    public function messages(){
+        return[
+            'libelle.required'=>'Champ obligatoire',
+            'immatriculation.required'=>'Champ obligatoire',
+            'immatriculation.unique'=>'L\'immatriculation doit être unique',
+            'type.required'=>'Champ obligatoire',
+            'nombre_place.required'=>'Champ obligatoire',
+            'nombre_place.min'=>'Minimun 1 place',
+            'agence_id.required'=>'Champ obligatoire',
+            'photo_interieur.max'=>'La taille maximale requise est 2 MB',
+            'photo_exterieur.max'=>'La taille maximale requise est 2 MB',
+            'photo_exterieur.required'=>'Champ est obligatoire',
+        ];
     }
 }

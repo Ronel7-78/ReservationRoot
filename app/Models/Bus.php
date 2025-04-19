@@ -19,7 +19,7 @@ class Bus extends Model
         'statut'
     ];
 
-    public function agence()
+    public function agences()
     {
         return $this->belongsTo(Agence::class);
     }

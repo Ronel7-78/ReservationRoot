@@ -15,8 +15,8 @@ class Trajet extends Model
         'prix'
     ];
 
-   // public function voyages(): HasMany
-   // {
-       // return $this->hasMany(Voyage::class);
-   // }
+    public function voyages(): HasMany
+    {
+        return $this->hasMany(Voyage::class);
+    }
 }

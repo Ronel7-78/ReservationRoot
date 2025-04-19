@@ -1,7 +1,7 @@
 @extends('../Template.app')
 
 @section('Travel')
-<title>Ajouter un Bus-Agence</title>
+<title>Ajouter un Trajet-Agence</title>
 <div class="container my-5">
     <div class="row g-3">
         <div class="col-md-3"></div>
@@ -18,34 +18,54 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label>ville de départ*</label>
-                                <input type="text" name="ville_depart" class="form-control" accept="image/*" required>
+                                <input type="text" name="ville_depart" class="form-control" value={{ old('ville_depart') }}>
+                                @error('ville_depart')
+                                    <div class="text text-danger">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label>Ville d'Arrivé</label>
-                                <input type="text" name="ville_arrive" class="form-control" accept="image/*">
+                                <input type="text" name="ville_arrivee" class="form-control" value={{ old('ville_arrivee') }}>
+                                @error('ville_arrivee')
+                                    <div class="text text-danger">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label>Standing*</label>
-                                    <select name="standing" class="form-select" required>
+                                    <select name="standing" class="form-select" value={{ old('standing') }}>
                                         <option value="vip">VIP</option>
-                                        <option value="standard">Standard</option>
+                                        <option value="classique">Classique</option>
                                     </select>
+                                    @error('standing')
+                                        <div class="text text-danger">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label>Prix*</label>
-                                    <input type="number" name="nombre_place" class="form-control" min="0" required>
+                                    <input type="number" name="prix" class="form-control" min="0" value={{ old('prix') }}>
+                                    @error('prix')
+                                        <div class="text text-danger">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
 
 
                         <button type="submit" class="btn btn-primary">Enregistrer</button>
-                    </form> 
+                    </form>
                 </div>
            </div>
         </div>

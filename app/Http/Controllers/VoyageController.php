@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreVoyageRequest;
+use App\Models\Agence;
 use App\Models\Bus;
 use App\Models\Trajet;
 use App\Models\Voyage;
@@ -24,12 +25,14 @@ class VoyageController extends Controller
     public function create()
     {
         $agenceId = auth()->user()->agence->id;
+        $agenceno =auth()->user()->agence->nom_commercial ;
         
         return view('Users/Agences/Voyages.create', [
             'trajets' => Trajet::all(),
             'buses' => Bus::where('agence_id', $agenceId)
                         ->where('statut', 'disponible')
-                        ->get()
+                        ->get(),
+                        'agences'=>Agence::all()
         ]);
     }
 

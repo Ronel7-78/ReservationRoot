@@ -1,7 +1,7 @@
 @extends('../Template.app')
 
 @section('Travel')
-<title>Ajouter un Bus-Agence</title>
+<title>Ajouter un Voyage </title>
 <div class="container my-5">
     <div class="row g-3">
         <div class="col-md-3"></div>
