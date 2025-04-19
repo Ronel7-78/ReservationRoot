@@ -42,7 +42,7 @@ class VoyageController extends Controller
         // Mise à jour du statut du bus
         $voyage->bus()->update(['statut' => 'indisponible']);
 
-        return redirect()->route('agence.voyages.index')
+        return redirect()->route('Agence.vdashboard')
             ->with('success', 'Voyage planifié avec succès!');
     }
 

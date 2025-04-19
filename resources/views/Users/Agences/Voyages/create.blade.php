@@ -16,7 +16,7 @@
                     
                         <div class="mb-3">
                             <label>Trajet*</label>
-                            <select name="trajet_id" class="form-select" required>
+                            <select name="trajet_id" class="form-select" >
                                 @foreach($trajets as $trajet)
                                     <option value="{{ $trajet->id }}">
                                         {{ $trajet->ville_depart }} → {{ $trajet->ville_arrivee }}
@@ -24,13 +24,17 @@
                                     </option>
                                 @endforeach
                             </select>
+                            @error('trajet_id')
+                                <div class="text text-danger">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                     
-                        <div class="row">
-                            <div class="col-md-6">
+                        
                                 <div class="mb-3">
                                     <label>Bus*</label>
-                                    <select name="bus_id" class="form-select" required id="busSelect">
+                                    <select name="bus_id" class="form-select"  id="busSelect">
                                         @foreach($buses as $bus)
                                             <option value="{{ $bus->id }}" 
                                                 data-photo="{{ asset('storage/'.$bus->photo_exterieur) }}">
@@ -38,15 +42,27 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                    @error('bus_id')
+                                        <div class="text text-danger">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
-                            </div>
-                            <div class="col-md-6">
+                            
+                        <div class="row">
+                            <div class="col-md-12">
                                 <div class="mb-3">
                                     <label>Date de départ*</label>
                                     <input type="datetime-local" name="date_depart" 
-                                        class="form-control" min="{{ now()->format('Y-m-d\TH:i') }}" required>
+                                        class="form-control" min="{{ now()->format('Y-m-d\TH:i') }}" >
+                                        @error('date_depart')
+                                            <div class="text text-danger">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                 </div>
                             </div>
+                            
                         </div>
                     
                         <div id="busPreview" class="text-center mb-4"></div>

@@ -25,7 +25,7 @@ public function rules()
 {
     return [
         'trajet_id' => 'required|exists:trajets,id',
-        'heure_depart'=>'required',
+    
         'bus_id' => [
             'required',
             'exists:buses,id',
@@ -39,6 +39,20 @@ public function rules()
             }
         ],
         'date_depart' => 'required|date|after:now'
+    ];
+}
+
+public function messages()
+{
+    return [
+        'trajet_id.required' => 'Le champ trajet est obligatoire.',
+        'trajet_id.exists' => 'Le trajet sélectionné n\'existe pas.',
+       
+        'bus_id.required' => 'Le champ bus est obligatoire.',
+        'bus_id.exists' => 'Le bus sélectionné n\'existe pas.',
+        'date_depart.required' => 'Le champ date de départ est obligatoire.',
+        'date_depart.date' => 'Veuillez entrer une date valide.',
+        'date_depart.after' => 'La date de départ doit être une date future.',
     ];
 }
 }

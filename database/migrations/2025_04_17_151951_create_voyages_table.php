@@ -17,7 +17,6 @@ public function up()
         $table->foreignId('trajet_id')->constrained();
         $table->foreignId('bus_id')->constrained();
         $table->dateTime('date_depart');
-        $table->time('heure_depart');
         $table->timestamps();
         
         // Index composite pour éviter les doublons

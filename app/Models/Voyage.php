@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Voyage extends Model
 {
-    protected $fillable = ['trajet_id', 'bus_id', 'date_depart', 'heure_depart'];
+    protected $fillable = ['trajet_id', 'bus_id', 'date_depart'];
 
     public function trajet(): BelongsTo
     {
