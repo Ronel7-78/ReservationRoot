@@ -7,6 +7,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/sweetalert.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script>
     <style>
         .custom-nav {
             background: linear-gradient(90deg, #1a237e 0%, #0d47a1 100%);
@@ -77,15 +80,11 @@
                                 </li>
                             @elseif(auth()->user()->role === 'agence')
                                 <!-- Menu Agence -->
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                        <i class="fas fa-bus"></i> Gestion Voyages
+                                <li class="nav-item ">
+                                    <a class="nav-link" href="{{ route('Agence.dashboard') }}" >
+                                        <i class="fas fa-bus"></i> Tableau de Board
                                     </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#"><i class="fas fa-road"></i> Trajets</a></li>
-                                        <li><a class="dropdown-item" href="#"><i class="fas fa-bus-alt"></i> Gestion Bus</a></li>
-                                        <li><a class="dropdown-item" href="#"><i class="fas fa-ticket-alt"></i> Réservations</a></li>
-                                    </ul>
+
                                 </li>
                             @else
                                 <!-- Menu Client -->

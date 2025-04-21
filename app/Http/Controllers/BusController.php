@@ -10,6 +10,16 @@ use Illuminate\Http\Request;
 
 class BusController extends Controller
 {
+
+    public function index(){
+        $buses = Bus::where('agence_id', auth()->user()->agence->id)
+                ->withCount(['voyages' => function($query) {
+                    $query->where('date_depart', '>', now());
+                }])
+                ->get();
+
+        return view('Users/Agences/Bus.index', compact('buses'));
+    }
     public function create()
     {
         $agenceId = auth()->user()->agence->id;

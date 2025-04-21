@@ -16,7 +16,13 @@ class VoyageController extends Controller
      */
     public function index()
     {
-        //
+        $voyages = Voyage::with(['bus', 'trajet'])
+        ->whereHas('bus', function($query) {
+            $query->where('agence_id', auth()->user()->agence->id);
+        })
+        ->get();
+
+    return view('Users/Agences/Voyages.index', compact('voyages'));
     }
 
     /**
@@ -26,7 +32,7 @@ class VoyageController extends Controller
     {
         $agenceId = auth()->user()->agence->id;
         $agenceno =auth()->user()->agence->nom_commercial ;
-        
+
         return view('Users/Agences/Voyages.create', [
             'trajets' => Trajet::all(),
             'buses' => Bus::where('agence_id', $agenceId)
@@ -38,11 +44,11 @@ class VoyageController extends Controller
 
     public function store(StoreVoyageRequest $request){
         $voyage = Voyage::create($request->validated());
-        
+
         // Mise à jour du statut du bus
         $voyage->bus()->update(['statut' => 'indisponible']);
 
-        return redirect()->route('Agence.vdashboard')
+        return redirect()->route('Agence.dashboard')
             ->with('success', 'Voyage planifié avec succès!');
     }
 

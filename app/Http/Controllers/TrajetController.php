@@ -26,7 +26,13 @@ class TrajetController extends Controller
      */
     public function index()
     {
-        //
+        $trajets = Trajet::whereHas('voyages.bus', function($query) {
+            $query->where('agence_id', auth()->user()->agence->id);
+        })
+        ->withCount('voyages')
+        ->get();
+
+    return view('Users/Agences/Trajets.index', compact('trajets'));
     }
 
     /**

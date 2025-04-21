@@ -19,7 +19,7 @@ Route::get('/home',[AdminController::class, 'index'])->name('home');
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->name('login.post');
-    
+
 
     Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
     Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
@@ -43,7 +43,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:agence'])->group(function () {
-    Route::prefix('Agence')->group(function () { 
+    Route::prefix('Agence')->group(function () {
         Route::get('/dashboard', [AgenceController::class, 'index'])->name('Agence.dashboard');
         Route::resource('agence/bus', BusController::class)->except(['show']);
         Route::post('check-bus-disponibilite', [BusController::class, 'checkDisponibilite']);
@@ -52,16 +52,26 @@ Route::middleware(['auth', 'role:agence'])->group(function () {
         Route::get('/trajet/create',[TrajetController::class, 'create'])->name('Agence.Trajet.create');
         Route::post('/trajet/store',[TrajetController::class, 'store'])->name('Agence.Trajet.store');
         Route::resource('agence/voyages', VoyageController::class)->except(['show']);
-        Route::get('/voyage/create',[VoyageController::class, 'create'])->name('Agence.Voyage.create'); 
+        Route::get('/voyage/create',[VoyageController::class, 'create'])->name('Agence.Voyage.create');
         Route::post('/voyage/store',[VoyageController::class, 'store'])->name('Agence.Voyage.store');
+
+        /**Liste des bus d'une agence particuliere */
+            // Voyages
+        Route::get('/agence/voyages', [VoyageController::class, 'index'])->name('Agence.Voyages.index');
+
+        // Bus
+        Route::get('/agence/bus', [BusController::class, 'index'])->name('Agence.Bus.index');
+
+        // Trajets
+        Route::get('/agence/trajets', [TrajetController::class, 'index'])->name('Agence.Trajets.index');
     });
-    
+
 });
 
 Route::middleware(['auth', 'role:client'])->group(function () {
-    Route::prefix('Client')->group(function () { 
+    Route::prefix('Client')->group(function () {
         Route::get('/home', [ClientController::class, 'index'])->name('Client.home');
     });
-    
+
 
 });

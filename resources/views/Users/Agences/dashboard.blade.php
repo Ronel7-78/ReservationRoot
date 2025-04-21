@@ -15,19 +15,19 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">
+                        <a class="nav-link text-white" href="{{ route('Agence.Trajets.index') }}">
                             <i class="fas fa-route me-2"></i>
                             Gérer les trajets
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">
+                        <a class="nav-link text-white" href="{{ route('Agence.Bus.index') }}">
                             <i class="fas fa-bus me-2"></i>
                             Gérer les bus
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">
+                        <a class="nav-link text-white" href="{{ route('Agence.Voyages.index') }}">
                             <i class="fas fa-calendar-alt me-2"></i>
                             Planifier un voyage
                         </a>
@@ -49,7 +49,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-md-3 col-6">
                     <div class="card bg-success text-white shadow-lg">
                         <div class="card-body">
@@ -134,26 +134,26 @@
         min-height: 100vh;
         box-shadow: 2px 0 5px rgba(0,0,0,0.1);
     }
-    
+
     .card {
         border: none;
         transition: transform 0.3s;
     }
-    
+
     .card:hover {
         transform: translateY(-5px);
     }
-    
+
     .btn-lg {
         padding: 1rem 2rem;
         border-radius: 15px;
     }
-    
+
     .list-group-item {
         border-left: 3px solid transparent;
         transition: all 0.3s;
     }
-    
+
     .list-group-item:hover {
         border-left-color: #0d6efd;
         background: #f8f9fa;
