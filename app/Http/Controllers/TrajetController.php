@@ -26,14 +26,27 @@ class TrajetController extends Controller
      */
     public function index()
     {
-        $trajets = Trajet::whereHas('voyages.bus', function($query) {
-            $query->where('agence_id', auth()->user()->agence->id);
+        $agenceId = auth()->user()->agence->id;
+    
+        // Récupérer les trajets via les bus de l'agence
+        $trajets = Trajet::whereHas('voyages.bus', function($query) use ($agenceId) {
+            $query->where('agence_id', $agenceId);
         })
-        ->withCount('voyages')
+        ->withCount(['voyages' => function($query) use ($agenceId) {
+            $query->whereHas('bus', fn($q) => $q->where('agence_id', $agenceId));
+        }])
         ->get();
-
-    return view('Users/Agences/Trajets.index', compact('trajets'));
+    
+        return view('Users/Agences/Trajets.index', compact('trajets'));
     }
+
+    // app/Models/Trajet.php
+public function scopeForAgence($query, $agenceId)
+{
+    return $query->whereHas('voyages.bus', function($q) use ($agenceId) {
+        $q->where('agence_id', $agenceId);
+    });
+}
 
     /**
      * Show the form for creating a new resource.

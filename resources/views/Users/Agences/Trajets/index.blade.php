@@ -21,6 +21,9 @@
                         </tr>
                     </thead>
                     <tbody>
+                    @if($trajets->isEmpty())
+                        <div class="alert alert-info">Aucun trajet enregistré pour le moment</div>
+                    @else
                         @foreach($trajets as $trajet)
                         <tr>
                             <td>{{ $trajet->ville_depart }} → {{ $trajet->ville_arrivee }}</td>
@@ -41,7 +44,9 @@
 
                         </td>
                         </tr>
+                        
                         @endforeach
+                        @endif
                     </tbody>
                 </table>
             </div>
