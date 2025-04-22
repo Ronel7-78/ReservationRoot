@@ -15,7 +15,7 @@ class Voyage extends Model
         return $this->belongsTo(Trajet::class);
     }
 
-    public function bus(){
+    public function bus(): BelongsTo{
     return $this->belongsTo(Bus::class);
   }
 }

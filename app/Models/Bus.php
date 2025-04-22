@@ -41,19 +41,10 @@ class Bus extends Model
     }
 
     // Vérifie la disponibilité du bus
-    public function estDisponible($date)
-    {
-        return !$this->voyages()
-            ->whereDate('date_depart', $date)
-            ->exists();
-    }
-
-    // app/Models/Bus.php
-    public function updateStatut(){
-        $this->statut = $this->voyages()
-            ->whereDate('date_depart', '>=', now())
-            ->exists() ? 'indisponible' : 'disponible';
-            
-        $this->save();
-    }
+    public function estDisponible($dateDepart)
+{
+    return !$this->voyages()
+        ->whereDate('date_depart', '=', $dateDepart)
+        ->exists();
+}
 }

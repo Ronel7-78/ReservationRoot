@@ -18,6 +18,7 @@ return new class extends Migration
                 $table->string('ville_arrivee');
                 $table->enum('standing', ['vip', 'classique']);
                 $table->decimal('prix', 10, 2);
+                $table->foreignId('agence_id')->constrained('agences')->onDelete('cascade');
                 $table->timestamps();
            
         });

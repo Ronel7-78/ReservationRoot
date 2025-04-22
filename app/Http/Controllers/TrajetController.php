@@ -16,8 +16,11 @@ class TrajetController extends Controller
 
     public function store(StoreTrajetRequest $request)
     {
-        Trajet::create($request->validated());
-         
+        Trajet::create([
+            ...$request->validated(),
+            'agence_id' => auth()->user()->agence->id
+        ]);
+    
         return redirect()->route('Agence.dashboard')
             ->with('success', 'Trajet créé avec succès!');
     }
@@ -27,26 +30,14 @@ class TrajetController extends Controller
     public function index()
     {
         $agenceId = auth()->user()->agence->id;
-    
-        // Récupérer les trajets via les bus de l'agence
-        $trajets = Trajet::whereHas('voyages.bus', function($query) use ($agenceId) {
-            $query->where('agence_id', $agenceId);
-        })
-        ->withCount(['voyages' => function($query) use ($agenceId) {
-            $query->whereHas('bus', fn($q) => $q->where('agence_id', $agenceId));
-        }])
-        ->get();
+        $trajets = Trajet::where('agence_id', $agenceId)
+            ->withCount('voyages')
+            ->get();
     
         return view('Users/Agences/Trajets.index', compact('trajets'));
     }
 
     // app/Models/Trajet.php
-public function scopeForAgence($query, $agenceId)
-{
-    return $query->whereHas('voyages.bus', function($q) use ($agenceId) {
-        $q->where('agence_id', $agenceId);
-    });
-}
 
     /**
      * Show the form for creating a new resource.

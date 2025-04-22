@@ -24,9 +24,9 @@
                         @foreach($voyages as $voyage)
                         <tr>
                             <td>{{ $voyage->trajet->ville_depart }} → {{ $voyage->trajet->ville_arrivee }}</td>
-                            <td>{{ $voyage->date_depart->format('d/m/Y H:i') }}</td>
+                            <td>{{ $voyage->date_depart}}</td>
                             <td>{{ $voyage->bus->immatriculation }}</td>
-                            <td>{{ $voyage->bus->nombre_place - $voyage->reservations->count() }}</td>
+                            <td>{{ $voyage->bus->nombre_place  }}</td>
                             <td>
                                 <a href="" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i>

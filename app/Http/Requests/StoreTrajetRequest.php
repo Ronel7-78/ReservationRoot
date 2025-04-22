@@ -25,7 +25,8 @@ class StoreTrajetRequest extends FormRequest
         'ville_depart' => 'required|string|max:255',
         'ville_arrivee' => 'required|string|max:255|different:ville_depart',
         'standing' => 'required|in:vip,classique',
-        'prix' => 'required|numeric|min:0'
+        'prix' => 'required|numeric|min:0',
+        'agence_id' => 'required|exists:agences,id' 
         ];
     }
 

@@ -35,6 +35,7 @@
                                 @enderror
                             </div>
                         </div>
+                        <input type="hidden" name="agence_id" value="{{ auth()->user()->agence->id }}">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">

@@ -34,10 +34,11 @@
                         
                                 <div class="mb-3">
                                     <label>Bus*</label>
-                                    <select name="bus_id" class="form-select"  id="busSelect">
+                                    <select name="bus_id" class="form-select" id="busSelect">
                                         @foreach($buses as $bus)
                                             <option value="{{ $bus->id }}" 
-                                                data-photo="{{ asset('storage/'.$bus->photo_exterieur) }}">
+                                                data-photo="{{ asset('storage/'.$bus->photo_exterieur) }}"
+                                                data-available="true">
                                                 {{ $bus->libelle }} ({{ $bus->immatriculation }})
                                             </option>
                                         @endforeach
@@ -65,7 +66,7 @@
                             
                         </div>
                     
-                        <div id="busPreview" class="text-center mb-4"></div>
+                        <div id="availabilityStatus" class="alert d-none"></div>
                     
                         <button type="submit" class="btn btn-primary">Planifier le voyage</button>
                     </form>
@@ -99,29 +100,39 @@
     @endif
 
 
-    @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const dateInput = document.getElementById('dateDepart');
     const busSelect = document.getElementById('busSelect');
-    const busPreview = document.getElementById('busPreview');
-    
-    function updateBusPreview() {
-        const selectedOption = busSelect.options[busSelect.selectedIndex];
-        const photoUrl = selectedOption.dataset.photo;
-        
-        busPreview.innerHTML = `
-            <img src="${photoUrl}" 
-                 class="img-fluid rounded shadow" 
-                 style="max-height: 200px;"
-                 alt="Photo du bus">
-            <div class="mt-2">
-                <small>${selectedOption.textContent}</small>
-            </div>
-        `;
+    const availabilityStatus = document.getElementById('availabilityStatus');
+
+    async function checkAvailability() {
+        const selectedDate = dateInput.value;
+        const selectedBus = busSelect.value;
+
+        if(!selectedDate || !selectedBus) return;
+
+        try {
+            const response = await fetch(`/check-bus-disponibilite?bus_id=${selectedBus}&date=${selectedDate}`);
+            const data = await response.json();
+            
+            if(data.disponible) {
+                availabilityStatus.classList.remove('alert-danger', 'd-none');
+                availabilityStatus.classList.add('alert-success');
+                availabilityStatus.textContent = 'Bus disponible pour cette date';
+            } else {
+                availabilityStatus.classList.remove('alert-success', 'd-none');
+                availabilityStatus.classList.add('alert-danger');
+                availabilityStatus.textContent = 'Bus déjà réservé pour cette date';
+            }
+        } catch (error) {
+            console.error('Erreur de vérification:', error);
+        }
     }
 
-    busSelect.addEventListener('change', updateBusPreview);
-    updateBusPreview(); // Initial load
+    dateInput.addEventListener('change', checkAvailability);
+    busSelect.addEventListener('change', checkAvailability);
 });
+</scrip>
 
- @endsection
+@endsection

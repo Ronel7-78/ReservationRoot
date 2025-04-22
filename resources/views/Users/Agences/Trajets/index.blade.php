@@ -16,7 +16,7 @@
                             <th>Trajet</th>
                             <th>Standing</th>
                             <th>Prix</th>
-                            <th>Voyages planifiés</th>
+                            
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -29,7 +29,7 @@
                             <td>{{ $trajet->ville_depart }} → {{ $trajet->ville_arrivee }}</td>
                             <td>{{ $trajet->standing }}</td>
                             <td>{{ number_format($trajet->prix, 0, ',', ' ') }} FCFA</td>
-                            <td>{{ $trajet->voyages_count }}</td>
+
                             <td>
 
                                 <a href="" class="btn btn-sm btn-warning">
@@ -44,13 +44,13 @@
 
                         </td>
                         </tr>
-                        
+
                         @endforeach
                         @endif
                     </tbody>
                 </table>
             </div>
-        </div> 
+        </div>
     </div>
     <div class="col-md-1"></div>
 </div>

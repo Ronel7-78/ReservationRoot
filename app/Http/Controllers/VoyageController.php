@@ -28,28 +28,20 @@ class VoyageController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        $agenceId = auth()->user()->agence->id;
-        $agenceno =auth()->user()->agence->nom_commercial ;
+    public function create(){
+    $agenceId = auth()->user()->agence->id;
 
-        return view('Users/Agences/Voyages.create', [
-            'trajets' => Trajet::all(),
-            'buses' => Bus::where('agence_id', $agenceId)
-                        ->where('statut', 'disponible')
-                        ->get(),
-                        'agences'=>Agence::all()
-        ]);
+    return view('Users/Agences/Voyages.create', [
+        'trajets' => Trajet::all(),
+        'buses' => Bus::where('agence_id', $agenceId)->get(),
+        'agences' => Agence::all()
+    ]);
     }
 
     public function store(StoreVoyageRequest $request){
-        $voyage = Voyage::create($request->validated());
-
-        // Mise à jour du statut du bus
-        $voyage->bus()->update(['statut' => 'indisponible']);
-
-        return redirect()->route('Agence.dashboard')
-            ->with('success', 'Voyage planifié avec succès!');
+    $voyage = Voyage::create($request->validated());
+    return redirect()->route('Agence.dashboard')
+        ->with('success', 'Voyage planifié avec succès!');
     }
 
     /**

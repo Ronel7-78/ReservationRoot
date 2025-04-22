@@ -46,7 +46,7 @@ Route::middleware(['auth', 'role:agence'])->group(function () {
     Route::prefix('Agence')->group(function () {
         Route::get('/dashboard', [AgenceController::class, 'index'])->name('Agence.dashboard');
         Route::resource('agence/bus', BusController::class)->except(['show']);
-        Route::post('check-bus-disponibilite', [BusController::class, 'checkDisponibilite']);
+        Route::get('check-bus-disponibilite', [BusController::class, 'checkDisponibilite']);
         Route::get('/bus/create',[BusController::class, 'create'])->name('Agence.Bus.create');
         Route::post('/bus/store',[BusController::class, 'store'])->name('Agence.Bus.store');
         Route::get('/trajet/create',[TrajetController::class, 'create'])->name('Agence.Trajet.create');

@@ -16,7 +16,7 @@
                             <th>Immatriculation</th>
                             <th>Type</th>
                             <th>Capacité</th>
-                            <th>Statut</th>
+   
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -26,11 +26,7 @@
                             <td>{{ $bus->immatriculation }}</td>
                             <td>{{ ucfirst($bus->type) }}</td>
                             <td>{{ $bus->nombre_place }} places</td>
-                            <td>
-                                <span class="badge bg-{{ $bus->statut === 'disponible' ? 'success' : 'danger' }}">
-                                    {{ $bus->statut }}
-                                </span>
-                            </td>
+                            
                             <td>
 
                                     <a href="" class="btn btn-sm btn-warning">
