@@ -8,8 +8,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Voyage extends Model
 {
-    protected $fillable = ['trajet_id', 'bus_id', 'date_depart'];
+    protected $fillable = ['trajet_id', 'bus_id', 'date_depart', 'statut'];
 
+    const STATUT_ACTIF = 'Actif';
+    const STATUT_INACTIF = 'Inactif';
+
+    // Scope pour les éléments actifs
+    public function scopeActif($query)
+    {
+        return $query->where('statut', self::STATUT_ACTIF);
+    }
+
+    // "Suppression" (désactivation)
+    public function desactiver()
+    {
+        $this->update(['statut' => self::STATUT_INACTIF]);
+    }
     public function trajet(): BelongsTo
     {
         return $this->belongsTo(Trajet::class);

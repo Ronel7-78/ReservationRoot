@@ -4,12 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+   
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">
+
+    <!-- SweetAlert 2 -->
+    <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+
+    <!-- Styles personnalisés -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/sweetalert.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.css"/>
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script>
     <style>
         .custom-nav {
             background: linear-gradient(90deg, #1a237e 0%, #0d47a1 100%);
@@ -158,6 +167,22 @@
 <div class="pagin ">
     @yield('Travel')
 </div>
+<!-- jQuery (version recommandée pour Bootstrap 5) -->
+<script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+
+<!-- Bootstrap Bundle with Popper -->
+<script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+
+<!-- DataTables -->
+<script src="{{ asset('js/datatables.min.js') }}"></script>
+
+<!-- SweetAlert 2 (nom de fichier corrigé) -->
+<script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
+
+
+
+<!-- Scripts personnalisés -->
+@stack('scripts')
 
 </body>
 </html>

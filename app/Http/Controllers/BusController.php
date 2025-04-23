@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Bus;
 use App\Http\Requests\StoreBusRequest;
 use App\Models\Agence;
+use App\Models\Voyage;
 use Illuminate\Http\Request;
 
 class BusController extends Controller
@@ -13,12 +14,14 @@ class BusController extends Controller
 
     public function index(){
         $buses = Bus::where('agence_id', auth()->user()->agence->id)
-                ->withCount(['voyages' => function($query) {
-                    $query->where('date_depart', '>', now());
-                }])
-                ->get();
+            ->where('statut', 'Actif') // Ajout du filtre statut
+            ->withCount(['voyages' => function($query) {
+                $query->where('date_depart', '>', now())
+                      ->where('statut', 'Actif'); // Filtre aussi les voyages actifs
+            }])
+            ->get();
 
-        return view('Users/Agences/Bus.index', compact('buses'));
+    return view('Users/Agences/Bus.index', compact('buses'));
     }
     public function create()
     {
@@ -47,11 +50,34 @@ class BusController extends Controller
             ->with('success', 'Bus ajouté avec succès!');
     }
 
-    public function checkDisponibilite(Request $request)
-    {
-        $bus = Bus::findOrFail($request->bus_id);
-        $disponible = $bus->estDisponible($request->date);
+    public function checkDisponibilite(Request $request){
+    $request->validate([
+        'bus_id' => 'required|exists:buses,id',
+        'date' => 'required|date'
+    ]);
 
-        return response()->json(['disponible' => $disponible]);
+    $dateOnly = \Carbon\Carbon::parse($request->date)->format('Y-m-d');
+    $exists = Voyage::where('bus_id', $request->bus_id)
+        ->whereDate('date_depart', $dateOnly)
+        ->exists();
+
+    return response()->json([
+        'disponible' => !$exists,
+        'message' => $exists 
+            ? 'Ce bus a déjà un voyage programmé pour cette date' 
+            : 'Bus disponible pour cette date'
+    ]);
+    }
+
+    public function destroy($id){
+        $bus = Bus::findOrFail($id);
+        
+        if ($bus->voyages()->where('statut', 'Actif')->exists()) {
+            return back()->with('error', 'Ce bus a des voyages actifs. Désactivez-les d\'abord.');
+        }
+        
+        $bus->update(['statut' => 'Inactif']);
+        
+        return back()->with('success', 'Bus désactivé avec succès');
     }
 }

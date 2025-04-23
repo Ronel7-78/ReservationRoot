@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Bus;
+use App\Models\Voyage;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreVoyageRequest extends FormRequest
@@ -21,26 +22,27 @@ class StoreVoyageRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     // app/Http/Requests/StoreVoyageRequest.php
-public function rules()
-{
-    return [
-        'trajet_id' => 'required|exists:trajets,id',
-    
-        'bus_id' => [
-            'required',
-            'exists:buses,id',
-            function ($attribute, $value, $fail) {
-                $bus = Bus::find($value);
-                $dateDepart = $this->input('date_depart');
-
-                if ($bus->voyages()->whereDate('date_depart', $dateDepart)->exists()) {
-                    $fail('Ce bus est déjà affecté à un voyage ce jour-là');
+    public function rules()
+    {
+        return [
+            'trajet_id' => 'required|exists:trajets,id',
+            'bus_id' => [
+                'required',
+                'exists:buses,id',
+                function ($attribute, $value, $fail) {
+                    $dateOnly = \Carbon\Carbon::parse($this->date_depart)->format('Y-m-d');
+                    $exists = Voyage::where('bus_id', $value)
+                        ->whereDate('date_depart', $dateOnly)
+                        ->exists();
+                    
+                    if ($exists) {
+                        $fail('Ce bus a déjà un voyage programmé pour cette date');
+                    }
                 }
-            }
-        ],
-        'date_depart' => 'required|date|after:now'
-    ];
-}
+            ],
+            'date_depart' => 'required|date|after_or_equal:now'
+        ];
+    }
 
 public function messages()
 {

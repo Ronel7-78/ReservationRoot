@@ -16,13 +16,17 @@ class VoyageController extends Controller
      */
     public function index()
     {
-        $voyages = Voyage::with(['bus', 'trajet'])
-        ->whereHas('bus', function($query) {
-            $query->where('agence_id', auth()->user()->agence->id);
-        })
-        ->get();
-
-    return view('Users/Agences/Voyages.index', compact('voyages'));
+        $agenceId = auth()->user()->agence->id;
+    
+        $voyages = Voyage::where('statut', 'Actif')
+            ->whereHas('bus', function($query) use ($agenceId) {
+                $query->where('agence_id', $agenceId)
+                      ->where('statut', 'Actif');
+            })
+            ->with(['trajet', 'bus'])
+            ->get();
+    
+        return view('Users/Agences/Voyages.index', compact('voyages'));
     }
 
     /**
@@ -71,8 +75,18 @@ class VoyageController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
+    public function destroy($id){
+        try {
+            $voyage = Voyage::findOrFail($id);
+            
+            // Vérifier les réservations actives si nécessaire
+            // if ($voyage->reservations()->actif()->exists()) {...}
+            
+            $voyage->desactiver();
+            
+            return back()->with('success', 'Voyage désactivé avec succès');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Erreur: '.$e->getMessage());
+        }
     }
 }

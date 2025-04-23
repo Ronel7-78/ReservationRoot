@@ -11,7 +11,7 @@
                     <h4>Ajouter un Trajet</h4>
                 </div>
                 <div class="card-body">
-                    <form id="voyageForm" action="{{ route('Agence.Voyage.store') }}" method="POST">
+                    <form id="voyageForm" action="{{ route('Agence.Bus.store') }}" method="POST">
                         @csrf
                     
                         <div class="mb-3">
@@ -98,41 +98,57 @@
         });
     </script>
     @endif
-
-
+    @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const dateInput = document.getElementById('dateDepart');
+    const dateInput = document.querySelector('input[name="date_depart"]');
     const busSelect = document.getElementById('busSelect');
     const availabilityStatus = document.getElementById('availabilityStatus');
+    const submitBtn = document.querySelector('#voyageForm button[type="submit"]');
 
     async function checkAvailability() {
         const selectedDate = dateInput.value;
         const selectedBus = busSelect.value;
 
-        if(!selectedDate || !selectedBus) return;
+        if(!selectedDate || !selectedBus) {
+            submitBtn.disabled = false;
+            availabilityStatus.classList.add('d-none');
+            return;
+        }
 
         try {
             const response = await fetch(`/check-bus-disponibilite?bus_id=${selectedBus}&date=${selectedDate}`);
             const data = await response.json();
             
+            availabilityStatus.classList.remove('d-none');
+            
             if(data.disponible) {
-                availabilityStatus.classList.remove('alert-danger', 'd-none');
+                availabilityStatus.classList.remove('alert-danger');
                 availabilityStatus.classList.add('alert-success');
-                availabilityStatus.textContent = 'Bus disponible pour cette date';
+                submitBtn.disabled = false;
             } else {
-                availabilityStatus.classList.remove('alert-success', 'd-none');
+                availabilityStatus.classList.remove('alert-success');
                 availabilityStatus.classList.add('alert-danger');
-                availabilityStatus.textContent = 'Bus déjà réservé pour cette date';
+                submitBtn.disabled = true;
             }
+            
+            availabilityStatus.textContent = data.message;
         } catch (error) {
             console.error('Erreur de vérification:', error);
+            availabilityStatus.classList.remove('d-none');
+            availabilityStatus.textContent = "Erreur lors de la vérification";
         }
     }
 
     dateInput.addEventListener('change', checkAvailability);
     busSelect.addEventListener('change', checkAvailability);
+    
+    // Vérification initiale si des valeurs existent
+    if(dateInput.value && busSelect.value) {
+        checkAvailability();
+    }
 });
-</scrip>
+</script>
+@endpush
 
 @endsection

@@ -31,7 +31,7 @@
                                 <a href="" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form action="" method="POST" class="d-inline">
+                                <form action="{{ route('Agence.Voyage.supprimer',$voyage->id) }}" method="POST" class="d-inline">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Confirmer la suppression?')">
                                         <i class="fas fa-trash"></i>

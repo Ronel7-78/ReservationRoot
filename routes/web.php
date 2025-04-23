@@ -44,28 +44,37 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 Route::middleware(['auth', 'role:agence'])->group(function () {
     Route::prefix('Agence')->group(function () {
+        // Dashboard
         Route::get('/dashboard', [AgenceController::class, 'index'])->name('Agence.dashboard');
-        Route::resource('agence/bus', BusController::class)->except(['show']);
+
+        // Routes ressources
+        Route::resource('bus', BusController::class)->except(['show'])
+            ->names([
+                'index' => 'Agence.Bus.index',
+                'create' => 'Agence.Bus.create',
+                'store' => 'Agence.Bus.store',
+                'destroy' => 'Agence.Bus.supprimer'
+            ]);
+
+        Route::resource('trajets', TrajetController::class)->except(['show'])
+            ->names([
+                'index' => 'Agence.Trajets.index',
+                'create' => 'Agence.Trajet.create',
+                'store' => 'Agence.Trajet.store',
+                'destroy' => 'Agence.Trajet.supprimer'
+            ]);
+
+        Route::resource('voyages', VoyageController::class)->except(['show'])
+            ->names([
+                'index' => 'Agence.Voyages.index',
+                'create' => 'Agence.Voyage.create',
+                'store' => 'Agence.Voyage.store',
+                'destroy' => 'Agence.Voyage.supprimer'
+            ]);
+
+        // Route spéciale
         Route::get('check-bus-disponibilite', [BusController::class, 'checkDisponibilite']);
-        Route::get('/bus/create',[BusController::class, 'create'])->name('Agence.Bus.create');
-        Route::post('/bus/store',[BusController::class, 'store'])->name('Agence.Bus.store');
-        Route::get('/trajet/create',[TrajetController::class, 'create'])->name('Agence.Trajet.create');
-        Route::post('/trajet/store',[TrajetController::class, 'store'])->name('Agence.Trajet.store');
-        Route::resource('agence/voyages', VoyageController::class)->except(['show']);
-        Route::get('/voyage/create',[VoyageController::class, 'create'])->name('Agence.Voyage.create');
-        Route::post('/voyage/store',[VoyageController::class, 'store'])->name('Agence.Voyage.store');
-
-        /**Liste des bus d'une agence particuliere */
-            // Voyages
-        Route::get('/agence/voyages', [VoyageController::class, 'index'])->name('Agence.Voyages.index');
-
-        // Bus
-        Route::get('/agence/bus', [BusController::class, 'index'])->name('Agence.Bus.index');
-
-        // Trajets
-        Route::get('/agence/trajets', [TrajetController::class, 'index'])->name('Agence.Trajets.index');
     });
-
 });
 
 Route::middleware(['auth', 'role:client'])->group(function () {

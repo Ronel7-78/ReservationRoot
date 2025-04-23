@@ -30,11 +30,19 @@ class TrajetController extends Controller
     public function index()
     {
         $agenceId = auth()->user()->agence->id;
-        $trajets = Trajet::where('agence_id', $agenceId)
-            ->withCount('voyages')
-            ->get();
     
-        return view('Users/Agences/Trajets.index', compact('trajets'));
+        $trajets = Trajet::where('statut', 'Actif') // Filtre statut
+        ->whereHas('voyages.bus', function($query) use ($agenceId) {
+            $query->where('agence_id', $agenceId)
+                  ->where('statut', 'Actif'); // Buses actifs
+        })
+        ->withCount(['voyages' => function($query) use ($agenceId) {
+            $query->whereHas('bus', fn($q) => $q->where('agence_id', $agenceId))
+                  ->where('statut', 'Actif'); // Voyages actifs
+        }])
+        ->get();
+
+    return view('Users/Agences/Trajets.index', compact('trajets'));
     }
 
     // app/Models/Trajet.php
@@ -70,8 +78,16 @@ class TrajetController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
+    public function destroy($id){
+    $trajet = Trajet::findOrFail($id);
+    
+    if ($trajet->voyages()->where('statut', 'Actif')->exists()) {
+        return back()->with('error', 
+            'Ce trajet a des voyages actifs. Désactivez-les d\'abord.');
     }
+    
+    $trajet->update(['statut' => 'Inactif']);
+    
+    return back()->with('success', 'Trajet désactivé');
+    }  
 }
