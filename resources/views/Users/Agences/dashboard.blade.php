@@ -44,8 +44,8 @@
                     <div class="card bg-primary text-white shadow-lg">
                         <div class="card-body">
                             <h5><i class="fas fa-bus"></i> Bus</h5>
-                            <h2 class="mb-0">15</h2>
-                            <small>Dont 12 disponibles</small>
+                            <h2 class="mb-0"><b>{{$totalBuses}}</b></h2>
+                            <small>Dont <b>{{$availableBuses}}</b> disponibles</small>
                         </div>
                     </div>
                 </div>
@@ -54,8 +54,8 @@
                     <div class="card bg-success text-white shadow-lg">
                         <div class="card-body">
                             <h5><i class="fas fa-route"></i> Trajets</h5>
-                            <h2 class="mb-0">8</h2>
-                            <small>Actifs</small>
+                            <h2 class="mb-0"><b>{{$activeTrajets}}</b></h2>
+                            <small> Actifs</small>
                         </div>
                     </div>
                 </div>
@@ -104,14 +104,18 @@
                 <div class="col-12">
                     <div class="card shadow">
                         <div class="card-header bg-dark text-white">
-                            <h5 class="mb-0"><i class="fas fa-history me-2"></i>Activités récentes</h5>
+                            <h5 class="mb-0"><i class="fas fa-history me-2"></i>Activités récentes (24 dernières heures)</h5>
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
+                                
+                                @foreach ($voyagesConfirnes as $voyage)
                                 <li class="list-group-item">
                                     <i class="fas fa-check-circle text-success me-2"></i>
-                                    Voyage #2345 confirmé (Yaoundé - Douala)
+                                    Voyage #{{ $voyage->id }} confirmé ({{ $voyage->lieu_depart }} - {{ $voyage->lieu_arrivee }})
                                 </li>
+
+                                @endforeach
                                 <li class="list-group-item">
                                     <i class="fas fa-bus text-primary me-2"></i>
                                     Nouveau bus enregistré (Immatriculation: LT-234-AB)

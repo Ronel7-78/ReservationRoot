@@ -21,4 +21,20 @@ class Agence extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+        public function buses()
+    {
+        return $this->hasMany(Bus::class);
+    }
+
+    public function trajets()
+    {
+        return $this->hasMany(Trajet::class);
+    }
+
+    // Dans le modèle Bus
+    public function voyages()
+    {
+        return $this->hasMany(Voyage::class);
+    }
 }
