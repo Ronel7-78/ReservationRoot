@@ -4,18 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-   
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">
-
-    <!-- SweetAlert 2 -->
-    <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
-
-    <!-- DataTables -->
-    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    @vite(['resources/css/app.css'])
 
     <!-- Styles personnalisés -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -167,19 +157,31 @@
 <div class="pagin ">
     @yield('Travel')
 </div>
-<!-- jQuery (version recommandée pour Bootstrap 5) -->
-<script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
 
-<!-- Bootstrap Bundle with Popper -->
-<script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+@vite(['resources/js/app.js'])
 
-<!-- DataTables -->
-<script src="{{ asset('js/datatables.min.js') }}"></script>
+<script>
+    // Gestion unifiée des messages
+    document.addEventListener('DOMContentLoaded', function() {
+        @if($errors->any())
+            Swal.fire({
+                icon: 'error',
+                title: 'Erreurs',
+                html: `@foreach($errors->all() as $error)<p>{{ $error }}</p>@endforeach`
+            });
+        @endif
 
-<!-- SweetAlert 2 (nom de fichier corrigé) -->
-<script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
-
-
+        @if(session('success'))
+            Swal.fire({
+                position: 'top-center',
+                icon: 'success',
+                title: '{{ session('success') }}',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        @endif
+    });
+    </script>
 
 <!-- Scripts personnalisés -->
 @stack('scripts')

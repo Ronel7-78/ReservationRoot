@@ -1,3 +1,18 @@
+// jQuery
+import $ from 'jquery';
+window.$ = window.jQuery = $;
+
+// Bootstrap
 import 'bootstrap';
-import '@fortawesome/fontawesome-free/js/all.min.js';
-window.$ = window.jQuery = require('jquery');
+
+// DataTables
+import 'datatables.net-bs5';
+
+// SweetAlert2
+import Swal from 'sweetalert2';
+window.Swal = Swal;
+
+// Initialisation
+$(document).ready(function() {
+    $('.datatable').DataTable();
+});

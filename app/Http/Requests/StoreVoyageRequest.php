@@ -34,7 +34,7 @@ class StoreVoyageRequest extends FormRequest
                     $exists = Voyage::where('bus_id', $value)
                         ->whereDate('date_depart', $dateOnly)
                         ->exists();
-                    
+
                     if ($exists) {
                         $fail('Ce bus a déjà un voyage programmé pour cette date');
                     }
@@ -44,17 +44,17 @@ class StoreVoyageRequest extends FormRequest
         ];
     }
 
-public function messages()
-{
-    return [
-        'trajet_id.required' => 'Le champ trajet est obligatoire.',
-        'trajet_id.exists' => 'Le trajet sélectionné n\'existe pas.',
-       
-        'bus_id.required' => 'Le champ bus est obligatoire.',
-        'bus_id.exists' => 'Le bus sélectionné n\'existe pas.',
-        'date_depart.required' => 'Le champ date de départ est obligatoire.',
-        'date_depart.date' => 'Veuillez entrer une date valide.',
-        'date_depart.after' => 'La date de départ doit être une date future.',
-    ];
-}
+    public function messages()
+    {
+        return [
+            'trajet_id.required' => 'Le champ trajet est obligatoire.',
+            'trajet_id.exists' => 'Le trajet sélectionné n\'existe pas.',
+
+            'bus_id.required' => 'Le champ bus est obligatoire.',
+            'bus_id.exists' => 'Le bus sélectionné n\'existe pas.',
+            'date_depart.required' => 'Le champ date de départ est obligatoire.',
+            'date_depart.date' => 'Veuillez entrer une date valide.',
+            'date_depart.after' => 'La date de départ doit être une date future.',
+        ];
+    }
 }

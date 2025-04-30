@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bus;
 use App\Http\Requests\StoreBusRequest;
+use App\Http\Requests\UpdateBusRequest;
 use App\Models\Agence;
 use App\Models\Voyage;
 use Illuminate\Http\Request;
@@ -28,6 +29,13 @@ class BusController extends Controller
         $agenceId = auth()->user()->agence->id;
         return view('Users/Agences/Bus.create',[
             'agences'=>Agence::where('id', $agenceId)->get()
+        ]);
+    }
+
+    public function edit(Bus $bus){
+        $agenceId = auth()->user()->agence->id;
+        return view('Users/Agences/Bus.Edit',[
+            'agences'=>Agence::where('id', $agenceId)->get(),'bus'=>$bus
         ]);
     }
 
@@ -63,21 +71,31 @@ class BusController extends Controller
 
     return response()->json([
         'disponible' => !$exists,
-        'message' => $exists 
-            ? 'Ce bus a déjà un voyage programmé pour cette date' 
+        'message' => $exists
+            ? 'Ce bus a déjà un voyage programmé pour cette date'
             : 'Bus disponible pour cette date'
     ]);
     }
 
+    public function update(UpdateBusRequest $request, Bus $bus){
+    // On conserve l'agence_id original
+    $validated = $request->validated();
+    $validated['agence_id'] = $bus->agence_id;
+
+    $bus->update($validated);
+
+    return redirect(route('Agence.Bus.index'))->with('success', 'Bus modifié avec succès');
+}
+
     public function destroy($id){
         $bus = Bus::findOrFail($id);
-        
+
         if ($bus->voyages()->where('statut', 'Actif')->exists()) {
             return back()->with('error', 'Ce bus a des voyages actifs. Désactivez-les d\'abord.');
         }
-        
+
         $bus->update(['statut' => 'Inactif']);
-        
-        return back()->with('success', 'Bus désactivé avec succès');
+
+        return back()->route('Agence.Bus.index')->with('success', 'Bus désactivé avec succès');
     }
 }

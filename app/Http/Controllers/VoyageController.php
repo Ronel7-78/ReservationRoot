@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreVoyageRequest;
+use App\Http\Requests\UpdateVoyageRequest;
 use App\Models\Agence;
 use App\Models\Bus;
 use App\Models\Trajet;
@@ -33,12 +34,19 @@ class VoyageController extends Controller
      * Show the form for creating a new resource.
      */
     public function create(){
+
     $agenceId = auth()->user()->agence->id;
 
+    // Récupérer uniquement les trajets de l'agence connectée
+    $trajets = Trajet::where('agence_id', $agenceId)->get();
+
+    // Récupérer les bus de l'agence connectée
+    $buses = Bus::where('agence_id', $agenceId)->get();
+
     return view('Users/Agences/Voyages.create', [
-        'trajets' => Trajet::all(),
-        'buses' => Bus::where('agence_id', $agenceId)->get(),
-        'agences' => Agence::all()
+        'trajets' => $trajets,
+        'buses' => $buses,
+        'agences' => Agence::all() // Si vous avez besoin de toutes les agences
     ]);
     }
 
@@ -61,15 +69,39 @@ class VoyageController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $agenceId = auth()->user()->agence->id;
+    
+        // Récupérer le voyage à modifier
+        $voyage = Voyage::findOrFail($id); // Assurez-vous d'avoir le bon modèle
+    
+        // Récupérer uniquement les trajets de l'agence connectée
+        $trajets = Trajet::where('agence_id', $agenceId)->get();
+    
+        // Récupérer les bus de l'agence connectée
+        $buses = Bus::where('agence_id', $agenceId)->get();
+    
+        return view('Users/Agences/Voyages.Edit', [
+            'voyage' => $voyage,
+            'trajets' => $trajets,
+            'buses' => $buses,
+            'agences' => Agence::all() 
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateVoyageRequest $request, Voyage $voyage)
     {
-        //
+        $request->merge([
+            'bus_id' => $voyage->bus_id,
+            'trajet_id' => $voyage->trajet_id
+        ]);
+    
+        $voyage->update($request->validated());
+        
+        return redirect()->route('Agence.Voyages.index')
+            ->with('success', 'Voyage mis à jour avec succès');
     }
 
     /**

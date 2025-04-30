@@ -48,19 +48,28 @@ Route::middleware(['auth', 'role:agence'])->group(function () {
         Route::get('/dashboard', [AgenceController::class, 'index'])->name('Agence.dashboard');
 
         // Routes ressources
-        Route::resource('bus', BusController::class)->except(['show'])
-            ->names([
-                'index' => 'Agence.Bus.index',
-                'create' => 'Agence.Bus.create',
-                'store' => 'Agence.Bus.store',
-                'destroy' => 'Agence.Bus.supprimer'
-            ]);
+        
+            Route::prefix('Bus')->group(function() {
+                Route::resource('bus', BusController::class,[
+                    'parameters' => ['bus' => 'bus']])->except(['show'])
+                    ->names([
+                        'index' => 'Agence.Bus.index',
+                        'create' => 'Agence.Bus.create',
+                        'store' => 'Agence.Bus.store',
+                        'edit' => 'Agence.Bus.Editer',
+                        'update' => 'Agence.Bus.Update',
+                        'destroy' => 'Agence.Bus.supprimer'
+                    ]);
+            });
+       
 
         Route::resource('trajets', TrajetController::class)->except(['show'])
             ->names([
                 'index' => 'Agence.Trajets.index',
                 'create' => 'Agence.Trajet.create',
                 'store' => 'Agence.Trajet.store',
+                'edit' => 'Agence.Trajet.edit',
+                'update'=> 'Agence.Trajet.update',
                 'destroy' => 'Agence.Trajet.supprimer'
             ]);
 
@@ -69,7 +78,9 @@ Route::middleware(['auth', 'role:agence'])->group(function () {
                 'index' => 'Agence.Voyages.index',
                 'create' => 'Agence.Voyage.create',
                 'store' => 'Agence.Voyage.store',
-                'destroy' => 'Agence.Voyage.supprimer'
+                'destroy' => 'Agence.Voyage.supprimer',
+                'edit'   =>  'Agence.Voyage.Edit',
+                'update' =>  'Agence.Voyage.Update'
             ]);
 
         // Route spéciale

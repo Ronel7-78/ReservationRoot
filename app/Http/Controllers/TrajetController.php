@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTrajetRequest;
+use App\Http\Requests\UpdateTrajetRequest;
 use App\Models\Trajet;
 use Illuminate\Http\Request;
 
@@ -64,15 +65,33 @@ class TrajetController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $agenceId = auth()->user()->agence->id;
+    
+        $trajets = Trajet::where('statut', 'Actif') // Filtre statut
+        ->whereHas('voyages.bus', function($query) use ($agenceId) {
+            $query->where('agence_id', $agenceId)
+                  ->where('statut', 'Actif'); // Buses actifs
+        })
+        ->withCount(['voyages' => function($query) use ($agenceId) {
+            $query->whereHas('bus', fn($q) => $q->where('agence_id', $agenceId))
+                  ->where('statut', 'Actif'); // Voyages actifs
+        }])
+        ->get();
+
+    return view('Users/Agences/Trajets.Edit', compact('trajets'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateTrajetRequest $request, Trajet $trajet)
     {
-        //
+        $validated = $request->validated();
+    $validated['agence_id'] = $trajet->agence_id;
+
+    $trajet->update($validated);
+
+    return redirect(route('Agence.Trajets.index'))->with('success', 'Trajet modifié avec succès');
     }
 
     /**

@@ -1,7 +1,7 @@
 @extends('../Template.app')
 
 @section('Travel')
-<title>Liste des Trajets</title>
+<title>Liste des Trajets - @foreach ($trajets as $trajet) {{ $trajet->agence->nom_commercial }}@endforeach</title>
 <div class="row g-3 my-5">
     <div class="col-md-1"></div>
     <div class="col-md-10">
@@ -16,37 +16,34 @@
                             <th>Trajet</th>
                             <th>Standing</th>
                             <th>Prix</th>
-                            
+
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                    @if($trajets->isEmpty())
-                        <div class="alert alert-info">Aucun trajet enregistré pour le moment</div>
-                    @else
+
                         @foreach($trajets as $trajet)
-                        <tr>
-                            <td>{{ $trajet->ville_depart }} → {{ $trajet->ville_arrivee }}</td>
-                            <td>{{ $trajet->standing }}</td>
-                            <td>{{ number_format($trajet->prix, 0, ',', ' ') }} FCFA</td>
+                            <tr>
+                                <td>{{ $trajet->ville_depart }} → {{ $trajet->ville_arrivee }}</td>
+                                <td>{{ $trajet->standing }}</td>
+                                <td>{{ number_format($trajet->prix, 0, ',', ' ') }} FCFA</td>
 
-                            <td>
+                                <td>
 
-                                <a href="" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="{{ route('Agence.Trajet.supprimer',$trajet->id) }}" method="POST" class="d-inline">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Confirmer la suppression?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                    <a href="{{ route('Agence.Trajet.edit',$trajet->id) }}" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('Agence.Trajet.supprimer',$trajet->id) }}" method="POST" class="d-inline">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Confirmer la suppression?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
 
-                        </td>
-                        </tr>
-
+                            </td>
+                            </tr>
                         @endforeach
-                        @endif
+
                     </tbody>
                 </table>
             </div>

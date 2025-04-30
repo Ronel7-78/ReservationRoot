@@ -28,7 +28,7 @@
                             <td>{{ $voyage->bus->immatriculation }}</td>
                             <td>{{ $voyage->bus->nombre_place  }}</td>
                             <td>
-                                <a href="" class="btn btn-sm btn-warning">
+                                <a href="{{ route('Agence.Voyage.Edit', $voyage->id) }}" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <form action="{{ route('Agence.Voyage.supprimer',$voyage->id) }}" method="POST" class="d-inline">
@@ -39,6 +39,7 @@
                                 </form>
                             </td>
                         </tr>
+                        
                         @endforeach
                     </tbody>
                 </table>
