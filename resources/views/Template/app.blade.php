@@ -87,13 +87,9 @@
                                 </li>
                             @else
                                 <!-- Menu Client -->
+                               
                                 <li class="nav-item">
-                                    <a class="nav-link" href="">
-                                        <i class="fas fa-search"></i> Rechercher un voyage
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="">
+                                    <a class="nav-link" href="{{ route('reservations.create') }}">
                                         <i class="fas fa-ticket-alt"></i> Mes réservations
                                     </a>
                                 </li>

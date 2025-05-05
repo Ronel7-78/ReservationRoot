@@ -21,7 +21,7 @@ class TrajetController extends Controller
             ...$request->validated(),
             'agence_id' => auth()->user()->agence->id
         ]);
-    
+
         return redirect()->route('Agence.dashboard')
             ->with('success', 'Trajet créé avec succès!');
     }
@@ -31,7 +31,7 @@ class TrajetController extends Controller
     public function index()
     {
         $agenceId = auth()->user()->agence->id;
-    
+
         $trajets = Trajet::where('statut', 'Actif') // Filtre statut
         ->whereHas('voyages.bus', function($query) use ($agenceId) {
             $query->where('agence_id', $agenceId)
@@ -66,7 +66,7 @@ class TrajetController extends Controller
     public function edit(string $id)
     {
         $agenceId = auth()->user()->agence->id;
-    
+
         $trajets = Trajet::where('statut', 'Actif') // Filtre statut
         ->whereHas('voyages.bus', function($query) use ($agenceId) {
             $query->where('agence_id', $agenceId)
@@ -99,14 +99,14 @@ class TrajetController extends Controller
      */
     public function destroy($id){
     $trajet = Trajet::findOrFail($id);
-    
+
     if ($trajet->voyages()->where('statut', 'Actif')->exists()) {
-        return back()->with('error', 
+        return back()->with('error',
             'Ce trajet a des voyages actifs. Désactivez-les d\'abord.');
     }
-    
+
     $trajet->update(['statut' => 'Inactif']);
-    
+
     return back()->with('success', 'Trajet désactivé');
-    }  
+    }
 }

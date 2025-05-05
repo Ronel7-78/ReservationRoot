@@ -3,8 +3,8 @@
 @section('Travel')
 <div class="container">
     <div class="row g-3">
-        <div class="col-md-3"></div>
-        <div class="col-md-6  ">
+        <div class="col-md-2"></div>
+        <div class="col-md-8  ">
             <div class="card shadow bd">
                     <div class="card-header bg-primary text-white">
                         <h4>Ajouter une nouvelle agence</h4>
@@ -12,7 +12,19 @@
                     <div class="card-body">
                         <form action="{{ route('admin.agences.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
-
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Code Agence*</label>
+                                    <input type="text" name="code_agence" class="form-control" placeholder="Exemple: AEXV (Agence express voyage) " value="{{ old('code_agence') }}">
+                                   <small class="text-muted">NB: Le code(MAJUSCULE) doit reprensenter les initiales du nom commercial</small>
+                                    
+                                    @error('code_agence')
+                                        <div class="text text-danger">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
@@ -98,7 +110,7 @@
                     </div>
                 </div>
         </div>
-        <div class="col-md-3"></div>
+        <div class="col-md-2"></div>
     </div>
 </div>
 

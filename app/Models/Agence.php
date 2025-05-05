@@ -10,21 +10,17 @@ class Agence extends Model
     use HasFactory;
     protected $fillable = [
         'user_id',
+        'code_agence',
         'nom_commercial',
         'logo',
         'localisation',
         'devise',
         'is_verified'
     ];
-    
+
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-        public function buses()
-    {
-        return $this->hasMany(Bus::class);
     }
 
     public function trajets()
@@ -32,9 +28,14 @@ class Agence extends Model
         return $this->hasMany(Trajet::class);
     }
 
-    // Dans le modèle Bus
-    public function voyages()
+
+    public function buses()
     {
-        return $this->hasMany(Voyage::class);
+        return $this->hasMany(Bus::class);
+    }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
     }
 }

@@ -47,6 +47,7 @@ class AdminController extends Controller
         Agence::create([
             'user_id' => $user->id,
             'nom_commercial' => $request->nom_commercial,
+            'code_agence' => $request->code_agence,
             'logo' => $logoPath,
             'localisation' => $request->localisation,
             'devise' => $request->devise,

@@ -24,6 +24,7 @@ class StoreAgenceRequest extends FormRequest
         return [
         'email' => 'required|email|unique:users',
         'password' => 'required|min:8',
+        'code_agence'=>'required|min:3|unique:agences',
         'nom_commercial' => 'required|string|max:255',
         'logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         'localisation' => 'required|string',
@@ -37,6 +38,9 @@ class StoreAgenceRequest extends FormRequest
             'nom_commercial.required' => ' Le nom commercial est requis ',
             'email.required' => 'L\'email est requis ',
             'logo.max' => 'La taille du fichier ne doit pas dépasser 2 Mo ',
+            'code_agence.required'=>'Le code de l\'agence est requis',
+            'code_agence.min'=>'Le code doit contenir au moins 3 caractères',
+            'code_agence.unique'=>'Ce code est déjà utilisé par une autre agence, choisissez-en un autre unique',
             'email.unique'=>'Cette adresse mail est déjà utilisée',
             'password.required' => 'Le mot de passe est requis ',
             'password.min'=>'Le mot de passe doit contenir au moins 8 caractères',

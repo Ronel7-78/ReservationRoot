@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AgenceController;
 use App\Http\Controllers\BusController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\TrajetController;
 use App\Http\Controllers\VoyageController;
 use Illuminate\Support\Facades\Route ;
@@ -91,6 +92,9 @@ Route::middleware(['auth', 'role:agence'])->group(function () {
 Route::middleware(['auth', 'role:client'])->group(function () {
     Route::prefix('Client')->group(function () {
         Route::get('/home', [ClientController::class, 'index'])->name('Client.home');
+        Route::get('/create', [ReservationController::class, 'create'])->name('reservations.create');
+        Route::post('/store', [ReservationController::class, 'store'])->name('reservations.store');
+        Route::get('/{reservation}/show', [ReservationController::class, 'show'])->name('reservations.show');
     });
 
 
