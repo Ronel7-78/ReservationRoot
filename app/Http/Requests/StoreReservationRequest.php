@@ -13,7 +13,7 @@ class StoreReservationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,24 +24,8 @@ class StoreReservationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'voyage_id' => [
-                'required',
-                'exists:voyages,id',
-                function ($attribute, $value, $fail) {
-                    $voyage = Voyage::find($value);
-                    if ($voyage->date_depart < now()) {
-                        $fail('Ce voyage est déjà parti');
-                    }
-                }
-            ],
-            'numero_siege' => [
-                'required',
-                'integer',
-                'min:2',
-                Rule::unique('reservations')->where(function ($query) {
-                    return $query->where('voyage_id', $this->voyage_id);
-                })
-            ]
+            'voyage_id' => 'required|exists:voyages,id',
+            'numero_siege' => 'required|integer|min:1'
         ];
     }
 

@@ -91,11 +91,12 @@ class BusController extends Controller
         $bus = Bus::findOrFail($id);
 
         if ($bus->voyages()->where('statut', 'Actif')->exists()) {
-            return back()->with('error', 'Ce bus a des voyages actifs. Désactivez-les d\'abord.');
+            return back()->with('error', 'Ce bus a des voyages actifs');
         }
 
-        $bus->update(['statut' => 'Inactif']);
+        $bus->update(['statut' => 'Inactif']); // Utilisation de la méthode du modèle
 
-        return back()->route('Agence.Bus.index')->with('success', 'Bus désactivé avec succès');
+        return redirect()->route('Agence.Bus.index') // Correction de la route
+            ->with('success', 'Bus désactivé');
     }
 }

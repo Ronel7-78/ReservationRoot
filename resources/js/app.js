@@ -16,3 +16,11 @@ window.Swal = Swal;
 $(document).ready(function() {
     $('.datatable').DataTable();
 });
+
+import './bootstrap';
+import Alpine from 'alpinejs';
+window.Alpine = Alpine;
+Alpine.start();
+
+import './reservation';
+

@@ -108,17 +108,17 @@
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
-                                
+
                                 @foreach ($voyagesConfirnes as $voyage)
                                 <li class="list-group-item">
                                     <i class="fas fa-check-circle text-success me-2"></i>
-                                    Voyage #{{ $voyage->id }} confirmé ({{ $voyage->lieu_depart }} - {{ $voyage->lieu_arrivee }})
+                                    Voyage #{{ $voyage->id }} confirmé ({{ $voyage->trajet->ville_depart }} - {{ $voyage->trajet->ville_arrivee }})
                                 </li>
 
                                 @endforeach
                                 <li class="list-group-item">
                                     <i class="fas fa-bus text-primary me-2"></i>
-                                    Nouveau bus enregistré (Immatriculation: LT-234-AB)
+                                    Nouveau bus enregistré (Immatriculation: {{ $voyage->bus->immatriculation  }})
                                 </li>
                                 <li class="list-group-item">
                                     <i class="fas fa-exclamation-triangle text-warning me-2"></i>

@@ -26,7 +26,8 @@ class AgenceController extends Controller
         $activeTrajets = Trajet::where('agence_id', $agenceId)->where('statut', 'Actif')->count();
 
         // Récupérer les voyages confirmés
-        $voyagesConfirnes = Voyage::where('created_at', '>=', now()->subDays());
+        $voyagesConfirnes = Voyage::where('created_at', '>=', now()->subDays(1))->get();
+
 
             // Récupérer les nouveaux bus enregistrés
         $nouveauxBuses = Bus::where('agence_id', $agenceId)

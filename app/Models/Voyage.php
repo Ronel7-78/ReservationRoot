@@ -1,6 +1,5 @@
 <?php
 
-// app/Models/Voyage.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -13,23 +12,26 @@ class Voyage extends Model
     const STATUT_ACTIF = 'Actif';
     const STATUT_INACTIF = 'Inactif';
 
-    // Scope pour les éléments actifs
     public function scopeActif($query)
     {
         return $query->where('statut', self::STATUT_ACTIF);
     }
 
-    // "Suppression" (désactivation)
     public function desactiver()
     {
         $this->update(['statut' => self::STATUT_INACTIF]);
     }
+
     public function trajet(): BelongsTo
     {
         return $this->belongsTo(Trajet::class);
     }
 
-    public function bus(): BelongsTo{
-    return $this->belongsTo(Bus::class);
-  }
+    public function reservations(){
+    return $this->hasMany(Reservation::class);
+    }
+
+    public function bus(){
+        return $this->belongsTo(Bus::class)->with(['agence', 'sieges']);
+    }
 }

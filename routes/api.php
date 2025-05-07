@@ -18,5 +18,3 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-// web.php ou api.php
-Route::get('/api/voyages/{voyage}/sieges', [SiegeController::class, 'getSieges']);

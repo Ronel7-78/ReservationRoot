@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Agence extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'user_id',
         'code_agence',
@@ -27,7 +28,6 @@ class Agence extends Model
     {
         return $this->hasMany(Trajet::class);
     }
-
 
     public function buses()
     {

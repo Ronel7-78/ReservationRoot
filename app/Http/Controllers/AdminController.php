@@ -8,6 +8,7 @@ use App\Http\Requests\StoreAdminRequest;
 use App\Http\Requests\StoreAgenceRequest;
 use App\Http\Requests\UpdateAdminRequest;
 use App\Models\Agence;
+use App\Models\Reservation;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
@@ -60,8 +61,52 @@ class AdminController extends Controller
     /**
      * Tableau de bord
      */
-    public function dashboard(){
-        return view('Users/Admins.Dashbord');
+        public function dashboard()
+    {
+        $stats = [
+            'agenceCount' => Agence::count(),
+            'clientCount' => User::where('role', 'client')->count(),
+            'adminCount' => Admin::count(),
+            'reservationCount' => Reservation::count(), // Supposons que vous avez un modèle Reservation
+            'agences' => Agence::latest()->take(5)->get(),
+            'activities' => $this->getRecentActivities()
+        ];
+
+        return view('Users/Admins.Dashbord', $stats);
+    }
+
+    private function getRecentActivities()
+    {
+        $activities = collect();
+
+        // Dernières agences
+        Agence::latest()->take(3)->get()->each(function ($agence) use ($activities) {
+            $activities->push([
+                'icon' => 'fas fa-building',
+                'title' => "Nouvelle agence enregistrée : {$agence->nom_commercial}",
+                'date' => $agence->created_at
+            ]);
+        });
+
+        // Derniers clients
+        User::where('role', 'client')->latest()->take(3)->get()->each(function ($user) use ($activities) {
+            $activities->push([
+                'icon' => 'fas fa-user-plus',
+                'title' => "Nouveau client inscrit : {$user->name}",
+                'date' => $user->created_at
+            ]);
+        });
+
+        // Dernières réservations
+        Reservation::latest()->take(3)->get()->each(function ($reservation) use ($activities) {
+            $activities->push([
+                'icon' => 'fas fa-ticket-alt',
+                'title' => "Nouvelle réservation #{$reservation->id}",
+                'date' => $reservation->created_at
+            ]);
+        });
+
+        return $activities->sortByDesc('date')->take(5);
     }
 
     /**

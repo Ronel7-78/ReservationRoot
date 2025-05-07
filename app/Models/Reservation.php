@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Agence;
 
 class Reservation extends Model
 {
@@ -23,42 +24,43 @@ class Reservation extends Model
 
     private static function generateCode(Agence $agence)
     {
+        $year = now()->format('y');
         $count = Reservation::where('agence_id', $agence->id)
-                 ->whereYear('created_at', now()->year)
-                 ->count() + 1;
+            ->whereYear('created_at', now()->year)
+            ->count() + 1;
 
-        return sprintf("%s-%04d-%02d", 
-            $agence->code_agence, 
-            $count, 
-            now()->format('y')
-        );
+        return sprintf("%s-%04d-%s", $agence->code_agence, $count, $year);
     }
 
-    private function generateQrCode()
-    {
-        $qrContent = json_encode([
-            'code' => $this->code,
-            'client' => $this->client_id,
-            'siege' => $this->numero_siege,
-            'voyage' => $this->voyage_id
-        ]);
 
-        $fileName = "qrcodes/{$this->code}.svg";
-        Storage::disk('public')->put($fileName, QrCode::size(300)->generate($qrContent));
-        
-        $this->qr_code_path = $fileName;
-    }
+    // private function generateQrCode()
+    // {
+        // $qrContent = json_encode([
+        //     'code' => $this->code,
+        //     'client' => $this->client_id,
+        //     'siege' => $this->numero_siege,
+        //     'voyage' => $this->voyage_id
+        // ]);
+
+        // $fileName = "qrcodes/{$this->code}.svg";
+        // Storage::disk('public')->put($fileName, \QrCode::size(300)->generate($qrContent));
+
+        // $this->qr_code_path = $fileName;
+    // }
 
     // Relations
-    public function client() {
+    public function client()
+    {
         return $this->belongsTo(User::class, 'client_id');
     }
 
-    public function agence() {
+    public function agence()
+    {
         return $this->belongsTo(Agence::class);
     }
 
-    public function voyage() {
+    public function voyage()
+    {
         return $this->belongsTo(Voyage::class);
     }
 

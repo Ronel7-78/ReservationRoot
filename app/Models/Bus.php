@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Bus extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'agence_id',
         'libelle',
@@ -20,47 +21,55 @@ class Bus extends Model
     ];
 
     const STATUT_ACTIF = 'Actif';
-const STATUT_INACTIF = 'Inactif';
+    const STATUT_INACTIF = 'Inactif';
 
-// Scope pour les éléments actifs
-public function scopeActif($query)
-{
-    return $query->where('statut', self::STATUT_ACTIF);
-}
-
-// "Suppression" (désactivation)
-public function desactiver()
-{
-    $this->update(['statut' => self::STATUT_INACTIF]);
-}
-
-    public function agences()
+    public function scopeActif($query)
     {
-        return $this->belongsTo(Agence::class);
+        return $query->where('statut', self::STATUT_ACTIF);
     }
 
-    public function voyages(){
-    return $this->hasMany(Voyage::class)->actif();
+    public function desactiver()
+    {
+        $this->update(['statut' => self::STATUT_INACTIF]);
     }
 
-    protected static function boot(){
-    parent::boot();
-
-    static::deleting(function ($bus) {
-        Storage::disk('public')->delete([
-            $bus->photo_interieur,
-            $bus->photo_exterieur
-        ]);
-    });
+    public function siegesDisponibles()
+    {
+        return $this->hasMany(Siege::class)->where('disponible', true);
     }
 
-    // Vérifie la disponibilité du bus
+    public function agence()
+    {
+        return $this->belongsTo(Agence::class, 'agence_id'); // Spécifiez explicitement la clé étrangère
+    }
+
+    public function voyages()
+    {
+        return $this->hasMany(Voyage::class)->actif();
+    }
+
+    public function sieges()
+    {
+        return $this->hasMany(Siege::class);
+    }
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($bus) {
+            Storage::disk('public')->delete([
+                $bus->photo_interieur,
+                $bus->photo_exterieur
+            ]);
+        });
+    }
+
     public function estDisponible($dateDepart)
     {
         $dateOnly = \Carbon\Carbon::parse($dateDepart)->format('Y-m-d');
-        
-        return !$this->voyages()
-            ->whereDate('date_depart', $dateOnly)
-            ->exists();
+
+        return !$this->voyages()->whereDate('date_depart', $dateOnly)->exists();
     }
 }

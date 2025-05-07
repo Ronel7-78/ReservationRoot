@@ -87,7 +87,7 @@
                                 </li>
                             @else
                                 <!-- Menu Client -->
-                               
+
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('reservations.create') }}">
                                         <i class="fas fa-ticket-alt"></i> Mes réservations
@@ -157,7 +157,6 @@
 @vite(['resources/js/app.js'])
 
 <script>
-    // Gestion unifiée des messages
     document.addEventListener('DOMContentLoaded', function() {
         @if($errors->any())
             Swal.fire({
@@ -177,10 +176,8 @@
             });
         @endif
     });
-    </script>
+</script>
 
-<!-- Scripts personnalisés -->
 @stack('scripts')
-
 </body>
 </html>
