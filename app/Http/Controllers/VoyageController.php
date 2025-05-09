@@ -144,8 +144,10 @@ public function sieges($voyageId)
     return response()->json([
         'status' => 'success',
         'sieges' => $sieges,
-        'nombre_places' => $voyage->bus->nombre_place
+        'nombre_places' => $voyage->bus->nombre_place,
+       
     ]);
+    
 }
 
 }

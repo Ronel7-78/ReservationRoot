@@ -66,17 +66,9 @@
                         @auth
                             @if(auth()->user()->role === 'admin')
                                 <!-- Menu Admin -->
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                        <i class="fas fa-tachometer-alt"></i> Administration
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#"><i class="fas fa-users"></i> Gestion Clients</a></li>
-                                        <li><a class="dropdown-item" href="#"><i class="fas fa-building"></i> Gestion Agences</a></li>
-                                        <li><a class="dropdown-item" href="#"><i class="fas fa-route"></i> Gestion Voyages</a></li>
-                                        <li><a class="dropdown-item" href="{{ route('admin.agences.create') }}"><i class="fas fa-route"></i> Ajouter une  Agence</a></li>
-                                    </ul>
-                                </li>
+                                <a class="nav-link " href="{{ route('Admin.dashboard') }}" >
+                                    <i class="fas fa-tachometer-alt"></i> Tableau de Board
+                                </a>
                             @elseif(auth()->user()->role === 'agence')
                                 <!-- Menu Agence -->
                                 <li class="nav-item ">

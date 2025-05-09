@@ -29,6 +29,8 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    
+
     // Relation avec le modèle Client
     public function client()
     {

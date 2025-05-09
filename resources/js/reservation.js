@@ -18,10 +18,11 @@ window.reservationSystem = function () {
             this.selectedSiege = null;
             this.total = 0;
 
-            fetch(`/api/voyages/${this.selectedVoyage}/sieges`)
+            fetch(`/Client/voyages/${this.selectedVoyage}/sieges`)
                 .then(res => res.ok ? res.json() : Promise.reject(res))
                 .then(data => {
-                    this.sieges = data;
+                    console.log('Réponse API sièges:', data);
+                    this.sieges = data.sieges;
                 })
                 .catch(err => {
                     this.errorMessage = 'Impossible de charger les sièges.';
@@ -32,9 +33,9 @@ window.reservationSystem = function () {
                 });
         },
 
-        selectSiege(numero, prix) {
+        selectSiege(numero) {
             this.selectedSiege = numero;
-            this.total = prix;
+            
         }
     }
 }

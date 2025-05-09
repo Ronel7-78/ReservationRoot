@@ -6,6 +6,7 @@ use App\Http\Requests\StoreAgenceRequest;
 use App\Http\Requests\UpdateAgenceRequest;
 use App\Models\Agence;
 use App\Models\Bus;
+use App\Models\Reservation;
 use App\Models\Trajet;
 use App\Models\Voyage;
 
@@ -16,47 +17,60 @@ class AgenceController extends Controller
      */
     public function index()
     {
-        $agenceId = auth()->user()->agence->id;
+        $agence = auth()->user()->agence;
+        $agenceId = $agence->id;
 
         // Compter les bus
         $totalBuses = Bus::where('agence_id', $agenceId)->count();
-        $availableBuses = Bus::where('agence_id', $agenceId)->where('statut', 'Actif')->count();
+        $availableBuses = Bus::where('agence_id', $agenceId)
+                            ->where('statut', 'Actif')
+                            ->count();
 
         // Compter les trajets actifs
-        $activeTrajets = Trajet::where('agence_id', $agenceId)->where('statut', 'Actif')->count();
+        $activeTrajets = Trajet::where('agence_id', $agenceId)
+                        ->where('statut', 'Actif')
+                        ->count();
 
-        // Récupérer les voyages confirmés
-        $voyagesConfirnes = Voyage::where('created_at', '>=', now()->subDays(1))->get();
-
-
-            // Récupérer les nouveaux bus enregistrés
-        $nouveauxBuses = Bus::where('agence_id', $agenceId)
-        ->where('created_at', '>=', now()->subDays(1)) // Dernieres 24 heures
+        // Voyages confirmés
+        $voyagesConfirnes = Voyage::whereHas('trajet', function ($query) use ($agenceId) {
+            $query->where('agence_id', $agenceId);
+        })
+        ->where('created_at', '>=', now()->subDays(1))
+        ->with(['trajet', 'bus'])
         ->get();
+        // Nouveaux bus
+        $nouveauxBuses = Bus::where('agence_id', $agenceId)
+                    ->where('created_at', '>=', now()->subDays(1))
+                    ->get();
 
-            // Récupérer les réservations annulées
-        //$reservationsAnnulees = Reservation::where('agence_id', $agenceId)
-        //->where('statut', 'Annulé')
-        //->whereMonth('created_at', now()->month)
-        //->count();
+        // Réservations annulées
+        $reservationsAnnulees = Reservation::where('agence_id', $agenceId)
+                                ->where('statut', 'Annulé')
+                                ->whereMonth('created_at', now()->month)
+                                ->count();
 
-        // Compter les réservations du mois en cours
-        //$reservationsCount = Reservation::where('agence_id', $agenceId)
-        //  ->whereMonth('created_at', now()->month)
-          //  ->count();
+        // Réservations du mois
+        $reservationsCount = Reservation::where('agence_id', $agenceId)
+                            ->whereMonth('created_at', now()->month)
+                            ->count();
 
-        // Calculer les revenus du mois en cours
+        // Revenus du mois
         //$revenus = Reservation::where('agence_id', $agenceId)
-           // ->whereMonth('created_at', now()->month)
-           // ->sum('montant'); // Supposant que 'montant' est le champ contenant le revenu
+        //        ->whereMonth('created_at', now()->month)
+        //        ->join('trajets', 'reservations.trajet_id', '=', 'trajets.id') // Assurez-vous que 'trajet_id' existe dans 'reservations'
+        //        ->sum('trajets.prix'); // Utilisez 'trajets.prix' pour accéder à la colonne prix
 
-        return view('Users.Agences.dashboard', [
-            'totalBuses' => $totalBuses,
-            'availableBuses' => $availableBuses,
-            'activeTrajets' => $activeTrajets,
-            'voyagesConfirnes' => $voyagesConfirnes,
-            'nouveauxBuses' => $nouveauxBuses,
-        ]);
+        return view('Users.Agences.dashboard', compact(
+            'totalBuses',
+            'availableBuses',
+            'activeTrajets',
+            'voyagesConfirnes',
+            'nouveauxBuses',
+            'reservationsAnnulees',
+            'reservationsCount',
+            
+            'agence'
+        ));
     }
 
     /**

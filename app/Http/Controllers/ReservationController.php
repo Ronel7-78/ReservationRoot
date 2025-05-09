@@ -43,65 +43,56 @@ class ReservationController extends Controller
         ]);
     }
 
-    public function getSieges(Voyage $voyage)
+    // ReservationController.php
+    //public function getSieges(Voyage $voyage)
+    //{
+    //    try {
+    //        $voyage->load(['bus.sieges.reservations']);
+    //
+    //        $sieges = $voyage->bus->sieges->map(function ($siege) use ($voyage) {
+    //            return [
+    //                'numero' => $siege->numero,
+    //                'disponible' => $siege->isDisponiblePourVoyage($voyage)
+    //            ];
+    //        });
+//
+    //        return response()->json([
+    //            'status' => 'success',
+    //            'sieges' => $sieges,
+    //            'nombre_places' => $voyage->bus->nombre_place,
+    //            'tarif' => $voyage->tarif
+    //        ]);
+//
+     //   } catch (\Exception $e) {
+    //        return response()->json([
+    //            'status' => 'error',
+    //            'message' => 'Erreur de chargement des sièges'
+    //        ], 500);
+    //    }
+    //}
+
+
+
+    public function store(StoreReservationRequest $request)
 {
-    $voyage->load(['bus.sieges']);
+    $voyage = Voyage::with('bus.agence')->findOrFail($request->voyage_id);
+    $agence = $voyage->bus->agence;
 
-    if (!$voyage->bus) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Bus non trouvé pour ce voyage.'
-        ], 404);
-    }
+    $reservation = new Reservation();
+    $reservation->code = Reservation::generateCode($agence);
+    $reservation->agence_id = $agence->id;
+    $reservation->voyage_id = $request->voyage_id;
+    $reservation->numero_siege = $request->numero_siege;
+    $reservation->client_id = auth()->user()->client->id;
 
-    $sieges = $voyage->bus->sieges->map(function ($siege) {
-        return [
-            'numero' => $siege->numero,
-            'disponible' => $siege->disponible
-        ];
-    });
+    $reservation->save();
 
-    return response()->json([
-        'status' => 'success',
-        'sieges' => $sieges,
-        'nombre_places' => $voyage->bus->nombre_place
-    ]);
+
+    return redirect()->route('Client.home')->with('success', 'Réservation créée avec succès');
 }
 
 
 
-    public function store(StoreReservationRequest $request){
-    return DB::transaction(function () use ($request) {
-        $client = auth()->user();
-        $voyage = Voyage::findOrFail($request->voyage_id);
-
-        $siege = Siege::where('bus_id', $voyage->bus_id)
-            ->where('numero', $request->numero_siege)
-            ->lockForUpdate()
-            ->firstOrFail();
-
-        if (!$siege->disponible) {
-            return back()->withErrors(['numero_siege' => 'Siège déjà réservé']);
-        }
-
-        $agenceCode = $voyage->bus->agence->code_agence;
-        $lastId = Reservation::max('id') + 1;
-        $annee = now()->format('y');
-        $codeReservation = sprintf('%s-%04d-%s', strtoupper($agenceCode), $lastId, $annee);
-
-
-        Reservation::create([
-            'code' => $codeReservation,
-            'agence_id' => $voyage->bus->agence_id,
-            'voyage_id' => $voyage->id,
-            'numero_siege' => $request->numero_siege
-        ]);
-
-        $siege->update(['disponible' => false]);
-
-        return redirect()->route('reservations.show');
-    });
-}
 
 
 

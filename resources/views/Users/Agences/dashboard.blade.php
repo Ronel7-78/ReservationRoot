@@ -64,7 +64,7 @@
                     <div class="card bg-info text-white shadow-lg">
                         <div class="card-body">
                             <h5><i class="fas fa-ticket-alt"></i> Réservations</h5>
-                            <h2 class="mb-0">234</h2>
+                            <h2 class="mb-0"><b> {{ $reservationsCount }} </b></h2>
                             <small>Ce mois</small>
                         </div>
                     </div>
@@ -108,22 +108,33 @@
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
-
-                                @foreach ($voyagesConfirnes as $voyage)
+                                @forelse ($voyagesConfirnes as $voyage)
                                 <li class="list-group-item">
                                     <i class="fas fa-check-circle text-success me-2"></i>
-                                    Voyage #{{ $voyage->id }} confirmé ({{ $voyage->trajet->ville_depart }} - {{ $voyage->trajet->ville_arrivee }})
+                                    Voyage #{{ $voyage->id }} confirmé 
+                                    ({{ optional($voyage->trajet)->ville_depart }} - 
+                                     {{ optional($voyage->trajet)->ville_arrivee }})
                                 </li>
-
-                                @endforeach
+                                @empty
+                                <li class="list-group-item">
+                                    Aucun voyage confirmé récemment
+                                </li>
+                                @endforelse
+            
+                                @foreach ($nouveauxBuses as $bus)
                                 <li class="list-group-item">
                                     <i class="fas fa-bus text-primary me-2"></i>
-                                    Nouveau bus enregistré (Immatriculation: {{ $voyage->bus->immatriculation  }})
+                                    Nouveau bus enregistré : {{ $bus->immatriculation }}
+                                    ({{ $bus->libelle }} - {{ $bus->nombre_place }} places)
                                 </li>
+                                @endforeach
+            
+                                @if($reservationsAnnulees > 0)
                                 <li class="list-group-item">
                                     <i class="fas fa-exclamation-triangle text-warning me-2"></i>
-                                    2 réservations annulées
+                                    {{ $reservationsAnnulees }} réservation(s) annulée(s)
                                 </li>
+                                @endif
                             </ul>
                         </div>
                     </div>
@@ -163,24 +174,5 @@
         background: #f8f9fa;
     }
 </style>
-@if ($errors->any())
-   <script>
-       document.addEventListener('DOMContentLoaded', function() {
-           // Récupère toutes les erreurs de validation
-           let errors = @json($errors->all());
-           // Affiche chaque erreur dans une alerte SweetAlert
-           errors.forEach(function(message) {
-               swal("Erreur", message, "error");
-           });
-       });
-   </script>
-   @endif
 
-   @if (session()->has('success'))
-   <script>
-       document.addEventListener('DOMContentLoaded', function() {
-           swal("Succès", "{{ session('success') }}", "success");
-       });
-   </script>
-@endif
 @endsection

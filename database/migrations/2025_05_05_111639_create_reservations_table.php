@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
-            $table->string('qr_code_path');
+            $table->string('qr_code_path')->nullable()->change();
             $table->foreignId('client_id')->constrained();
             $table->foreignId('agence_id')->constrained();
             $table->foreignId('voyage_id')->constrained();
             $table->integer('numero_siege');
             $table->enum('statut', ['En attente', 'Confirmée', 'Annulée'])->default('En attente');
+            $table->foreignId('siege_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
 
             $table->unique(['voyage_id', 'numero_siege']);

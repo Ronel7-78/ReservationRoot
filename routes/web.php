@@ -74,13 +74,13 @@ Route::middleware(['auth', 'role:agence'])->group(function () {
 
 Route::middleware(['auth', 'role:client'])->group(function () {
     Route::prefix('Client')->group(function () {
+        Route::get('/dashboard', [ClientController::class, 'dashboard'])->name('client.dashboard');
         Route::get('/home', [ClientController::class, 'index'])->name('Client.home');
         Route::get('/create', [ReservationController::class, 'create'])->name('reservations.create');
         Route::post('/store', [ReservationController::class, 'store'])->name('reservations.store');
         Route::get('/{reservation}/show', [ReservationController::class, 'show'])->name('reservations.show');
+        Route::get('/voyages/{voyage}/sieges', [VoyageController::class, 'sieges']); 
     });
 });
-Route::middleware(['auth', 'role:client'])->prefix('Client')->group(function () {
-    Route::get('/voyages/{voyage}/sieges', [VoyageController::class, 'sieges']);
-});
+
 

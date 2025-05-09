@@ -15,44 +15,61 @@ class Reservation extends Model
     {
         parent::boot();
 
-        static::creating(function ($model) {
-            $model->code = self::generateCode($model->agence);
-            $model->generateQrCode();
-            $model->client_id = auth()->id();
-        });
+        //static::creating(function ($model) {
+        //    $model->code = self::generateCode($model->agence);
+        //    $model->generateQrCode();
+        //    $model->client_id = auth()->user()->client->id;
+        //});
     }
 
-    private static function generateCode(Agence $agence)
+    protected function generateQrCode()
     {
-        $year = now()->format('y');
-        $count = Reservation::where('agence_id', $agence->id)
-            ->whereYear('created_at', now()->year)
-            ->count() + 1;
+        $qrContent = json_encode([
+            'code' => $this->code,
+            'client' => $this->client_id,
+            'siege' => $this->numero_siege,
+            'voyage' => $this->voyage_id
+        ]);
 
-        return sprintf("%s-%04d-%s", $agence->code_agence, $count, $year);
+        $url = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode($qrContent);
+        $qrImage = file_get_contents($url);
+
+        $fileName = "qrcodes/{$this->code}.png";
+        Storage::disk('public')->put($fileName, $qrImage);
+
+        $this->qr_code_path = $fileName;
     }
 
 
-    // private function generateQrCode()
-    // {
-        // $qrContent = json_encode([
-        //     'code' => $this->code,
-        //     'client' => $this->client_id,
-        //     'siege' => $this->numero_siege,
-        //     'voyage' => $this->voyage_id
-        // ]);
+    public static function generateCode(Agence $agence)
+{
+    $year = now()->format('y');
+    $count = self::where('agence_id', $agence->id)
+        ->whereYear('created_at', now()->year)
+        ->count() + 1;
 
-        // $fileName = "qrcodes/{$this->code}.svg";
-        // Storage::disk('public')->put($fileName, \QrCode::size(300)->generate($qrContent));
+    return sprintf("%s-%04d-%s", $agence->code_agence, $count, $year);
+}
 
-        // $this->qr_code_path = $fileName;
-    // }
 
+
+
+
+    public function getStatusColorAttribute()
+    {
+        return match($this->status) {
+            'confirmé' => 'success',
+            'en attente' => 'warning',
+            'annulé' => 'danger',
+            default => 'secondary'
+        };
+    }
     // Relations
     public function client()
     {
-        return $this->belongsTo(User::class, 'client_id');
+        return $this->belongsTo(Client::class);
     }
+
 
     public function agence()
     {

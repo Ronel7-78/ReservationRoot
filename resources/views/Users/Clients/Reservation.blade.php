@@ -1,6 +1,7 @@
 @extends('../Template.app')
 
 @section('Travel')
+<title>Reservation-Creation</title>
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8">
@@ -15,7 +16,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form action="{{ route('reservations.store') }}" method="POST" @submit.prevent="submitForm">
+                    <form action="{{ route('reservations.store') }}" method="POST">
                         @csrf
 
                         <!-- Sélection du voyage -->
@@ -68,7 +69,7 @@
                                         'available': siege.disponible && selectedSiege !== siege.numero,
                                         'selected': selectedSiege === siege.numero
                                     }"
-                                    @click="selectSiege(siege)"
+                                    @click="selectSiege(siege.numero)"
                                     x-text="siege.numero"
                                 ></div>
                             </template>
@@ -83,31 +84,32 @@
 
                         <!-- Résumé -->
                         <div class="resume-card card mt-4"
-                             x-show="selectedSieges.length"
-                             x-cloak>
+                            x-show="selectedSiege"
+                            x-cloak>
                             <div class="card-body">
                                 <h5 class="card-title">Résumé</h5>
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span>Siège sélectionné :</span>
-                                    <span x-text="selectedSieges.join(', ')"></span>
+                                    <span>Siège sélectionné :</span>
+                                    <span x-text="selectedSiege"></span>
                                 </div>
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span>Total :</span>
-                                    <span x-text="`${total} FCFA`"></span>
+                                    <span>Total :</span>
+                                    <span x-text="`${total} FCFA`"></span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Champs cachés pour l’envoi -->
-                        <input type="hidden" name="siege_numero" :value="selectedSiege">
-                        <template x-for="numero in selectedSieges" :key="numero">
-                            <input type="hidden" name="siege_numeros[]" :value="numero">
+
+                        <template x-for="numero in selectedSiege" :key="numero">
+                            <input type="hidden" name="numero_siege" :value="selectedSiege">
                         </template>
 
                         <!-- Bouton de validation -->
-                        <div class="mt-3 text-center" x-show="selectedSieges.length" x-cloak>
+                        <div class="mt-3 text-center" x-show="selectedSiege" x-cloak>
                             <button class="btn btn-success" type="submit">Valider la réservation</button>
                         </div>
+
                     </form>
                 </div>
             </div>

@@ -26,6 +26,7 @@ class StoreReservationRequest extends FormRequest
         return [
             'voyage_id' => 'required|exists:voyages,id',
             'numero_siege' => 'required|integer|min:1'
+
         ];
     }
 
